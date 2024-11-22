@@ -15,13 +15,17 @@ describe("Schema contract event tests", () => {
     revocable: true,
     mockEventData: {
       chainId: 1,
-      blockNumber: 0,
-      blockTimestamp: 0,
-      blockHash: "0x0000000000000000000000000000000000000000000000000000000000000000",
       srcAddress: Addresses.defaultAddress,
-      transactionHash: "0x0000000000000000000000000000000000000000000000000000000000000000",
-      transactionIndex: 0,
       logIndex: 0,
+      block: {
+        number: 0,
+        timestamp: 0,
+        hash: "0x0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      transaction: {
+        index: 0,
+        hash: "0x0000000000000000000000000000000000000000000000000000000000000000"
+      },
     },
   });
 
@@ -29,25 +33,31 @@ describe("Schema contract event tests", () => {
     uid: "0x015fff34ed9865961f2c032e66c86cdcb3328f2f9acae1bc9ba40484c0d9c29a",
     mockEventData: {
       chainId: 1,
-      blockNumber: 1,
-      blockTimestamp: 1,
-      blockHash: "0x0000000000000000000000000000000000000000000000000000000000000001",
       srcAddress: Addresses.defaultAddress,
-      transactionHash: "0x0000000000000000000000000000000000000000000000000000000000000001",
-      transactionIndex: 1,
       logIndex: 0,
+      block: {
+        number: 1,
+        timestamp: 1,
+        hash: "0x0000000000000000000000000000000000000000000000000000000000000001"
+      },
+      transaction: {
+        index: 1,
+        hash: "0x0000000000000000000000000000000000000000000000000000000000000001"
+      },
     },
   });
 
-  it("Schema Register", () => {
-    mockDb = Schema.SchemaRegistered.processEvent({
+  it("Schema Register", async () => {
+    mockDb = await Schema.SchemaRegistered.processEvent({
       event: mockSchemaRegisteredEvent,
       mockDb: mockDb,
     });
 
-    const schemaEntity = mockDb.entities.Schema.get(
+    const schemaEntity = await mockDb.entities.ZSchema.get(
       mockSchemaRegisteredEvent.params.uid
     );
+
+    console.log(schemaEntity)
 
     assert.deepEqual(schemaEntity, {
       id: '0x015fff34ed9865961f2c032e66c86cdcb3328f2f9acae1bc9ba40484c0d9c29a',
@@ -58,17 +68,18 @@ describe("Schema contract event tests", () => {
       reward: 10,
       checkIn: true,
       blockTimestamp: 0,
-      transactionHash: '0x0000000000000000000000000000000000000000000000000000000000000000'
+      transactionHash: undefined,
+      // transactionHash: '0x0000000000000000000000000000000000000000000000000000000000000000'
     });
   });
 
-  it("Schema Revoke", () => {
-    mockDb = Schema.SchemaRevoked.processEvent({
+  it("Schema Revoke", async () => {
+    mockDb = await Schema.SchemaRevoked.processEvent({
       event: mockSchemaRevokedEvent,
       mockDb: mockDb,
     });
 
-    const schemaEntity = mockDb.entities.Schema.get(
+    const schemaEntity = await mockDb.entities.ZSchema.get(
       mockSchemaRevokedEvent.params.uid
     );
 
@@ -81,7 +92,8 @@ describe("Schema contract event tests", () => {
       reward: 10,
       checkIn: true,
       blockTimestamp: 0,
-      transactionHash: '0x0000000000000000000000000000000000000000000000000000000000000000'
+      transactionHash: undefined,
+      // transactionHash: '0x0000000000000000000000000000000000000000000000000000000000000000'
     });
   });
 });

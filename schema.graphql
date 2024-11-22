@@ -1,4 +1,4 @@
-type Schema @entity {
+type ZSchema @entity {
   id: String!
   schemaURI: String!
   category: String!

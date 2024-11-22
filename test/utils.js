@@ -6,11 +6,15 @@ const TOTAL_REWARD_ID = "e573a447e86d91ef8e17f49bd1083b9107e32538627e0026ea5e163
 const TOTAL_REWARD = 16000000;
 
 const blockInfo = {
-  blockNumber: 0,
-  blockTimestamp: 0,
-  blockHash: "0x0000000000000000000000000000000000000000000000000000000000000000",
-  transactionHash: "0x0000000000000000000000000000000000000000000000000000000000000000",
-  transactionIndex: 0,
+  block: {
+    number: 0,
+    timestamp: 0,
+    hash: "0x0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  transaction: {
+    index: 0,
+    hash: "0x0000000000000000000000000000000000000000000000000000000000000000"
+  },
 }
 
 const schemaRegisterAddress = "0x29f15c2bb9298a534d257d04ec70124b9d074113";
@@ -18,22 +22,22 @@ const notaryAddress = "0x9D8A6eBaD8b76c6E25a00ab02EC685529Ee3e30e";
 const allocatorAddress = "0x19a567b3b212a5b35bA0E3B600FbEd5c2eE9083d";
 
 const nextBlock = () => {
-  blockInfo.blockNumber += 1;
-  blockInfo.blockTimestamp += 1;
+  blockInfo.block.number += 1;
+  blockInfo.block.timestamp += 1;
 
-  let blockHash = parseInt(blockInfo.blockHash, 16);
+  let blockHash = parseInt(blockInfo.block.hash, 16);
   blockHash += 1
   blockHash = blockHash.toString(16).padStart(64, 0);
-  blockInfo.blockHash = blockHash;
+  blockInfo.block.hash = blockHash;
 
-  let transactionHash = parseInt(blockInfo.transactionHash, 16);
+  let transactionHash = parseInt(blockInfo.transaction.hash, 16);
   transactionHash += 1
   transactionHash = transactionHash.toString(16).padStart(64, 0);
-  blockInfo.transactionHash = transactionHash;
+  blockInfo.transaction.hash = transactionHash;
 
-  blockInfo.transactionIndex += 1;
+  blockInfo.transaction.index += 1;
 
-  return blockInfo.blockTimestamp;
+  return blockInfo.block.timestamp;
 }
 
 const createSchemaRegisteredEvent = (chainId, uid, schemaURI, schemaData) => {
@@ -45,13 +49,10 @@ const createSchemaRegisteredEvent = (chainId, uid, schemaURI, schemaData) => {
     revocable: true,
     mockEventData: {
       chainId,
-      blockNumber: blockInfo.blockNumber,
-      blockTimestamp: blockInfo.blockTimestamp,
-      blockHash: blockInfo.blockHash,
       srcAddress: schemaRegisterAddress,
-      transactionHash: blockInfo.transactionHash,
-      transactionIndex: blockInfo.transactionIndex,
       logIndex: 0,
+      block: blockInfo.block,
+      transaction: blockInfo.transaction,
     },
   });
 
@@ -68,13 +69,10 @@ const createMockZasAttestedEvent = (chainId, recipient, uid, schema, nullifier) 
     nullifier,
     mockEventData: {
       chainId,
-      blockNumber: blockInfo.blockNumber,
-      blockTimestamp: blockInfo.blockTimestamp,
-      blockHash: blockInfo.blockHash,
       srcAddress: recipient,
-      transactionHash: blockInfo.transactionHash,
-      transactionIndex: blockInfo.transactionIndex,
       logIndex: 0,
+      block: blockInfo.block,
+      transaction: blockInfo.transaction,
     },
   });
 
@@ -90,13 +88,10 @@ const createMockZasRevokedEvent = (chainId, recipient, uid, schema, nullifier) =
     nullifier,
     mockEventData: {
       chainId,
-      blockNumber: blockInfo.blockNumber,
-      blockTimestamp: blockInfo.blockTimestamp,
-      blockHash: blockInfo.blockHash,
       srcAddress: recipient,
-      transactionHash: blockInfo.transactionHash,
-      transactionIndex: blockInfo.transactionIndex,
       logIndex: 0,
+      block: blockInfo.block,
+      transaction: blockInfo.transaction,
     },
   });
 
