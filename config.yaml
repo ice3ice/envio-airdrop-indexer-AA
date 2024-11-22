@@ -26,3 +26,7 @@ networks:
         address: "0xE29AD05f577222BD382c64A873C9A01544A3330E"
       - name: Zas
         address: "0x4E2F19B4496EEB9c04Fd16327fe9FE0610721f9D"
+field_selection:
+  transaction_fields:
+    - "hash"
+    - "transactionIndex"
