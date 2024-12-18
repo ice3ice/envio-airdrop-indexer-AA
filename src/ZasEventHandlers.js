@@ -40,6 +40,16 @@ Zas.Attested.handler(async ({ event, context }) => {
     };
   }
 
+  let schemaAttestationCounterEntity = await context.SchemaAttestationCounter.get(schemaId);
+  if (!schemaAttestationCounterEntity) {
+    schemaAttestationCounterEntity = {
+      id: schemaId,
+      count: 1,
+    }
+  } else {
+    schemaAttestationCounterEntity.count += 1;
+  }
+
   let userRewardEntity = await context.UserReward.get(recipient)
   if (!userRewardEntity) {
     userRewardEntity = {
@@ -76,6 +86,7 @@ Zas.Attested.handler(async ({ event, context }) => {
   context.Nonce.set(nonceEntity);
   context.TotalReward.set(totalRewardEntity);
   context.UserReward.set(userRewardEntity);
+  context.SchemaAttestationCounter.set(schemaAttestationCounterEntity);
 });
 
 
@@ -116,5 +127,10 @@ Zas.Revoked.handler(async ({ event, context }) => {
     totalRewardEntity.reward += reward;
 
     context.TotalReward.set(totalRewardEntity);
+
+    let schemaAttestationCounterEntity = await context.SchemaAttestationCounter.get(schemaId);
+    schemaAttestationCounterEntity.count -= 1;
+
+    context.SchemaAttestationCounter.set(schemaAttestationCounterEntity);
   }
 });
